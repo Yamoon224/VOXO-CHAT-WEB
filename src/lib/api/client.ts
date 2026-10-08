@@ -4,6 +4,7 @@ import { getToken } from "@/lib/auth/token-store";
 
 export type ApiRequestOptions = {
   method?: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+  /** Un `FormData` part tel quel (import de fichiers) : jamais sérialisé en JSON. */
   body?: unknown;
   query?: Record<string, string | number | boolean | null | undefined>;
   /** Jamais envoyé pour les routes publiques (connexion, invitation non authentifiée, etc). */
@@ -42,8 +43,12 @@ function buildUrl(path: string, query?: ApiRequestOptions["query"]): string {
 export async function apiFetch<T>(path: string, options: ApiRequestOptions = {}): Promise<T> {
   const { method = "GET", body, query, withAuth = true, signal } = options;
 
+  const isFormData = body instanceof FormData;
+
   const headers: Record<string, string> = { Accept: "application/json" };
-  if (body !== undefined) {
+  if (body !== undefined && !isFormData) {
+    // `FormData` fixe elle-même son `Content-Type` (avec la frontière
+    // multipart) : la poser ici l'écraserait et casserait l'envoi.
     headers["Content-Type"] = "application/json";
   }
   if (withAuth) {
@@ -58,7 +63,7 @@ export async function apiFetch<T>(path: string, options: ApiRequestOptions = {})
     response = await fetch(buildUrl(path, query), {
       method,
       headers,
-      body: body !== undefined ? JSON.stringify(body) : undefined,
+      body: body === undefined ? undefined : isFormData ? body : JSON.stringify(body),
       signal,
     });
   } catch {
