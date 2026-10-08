@@ -11,4 +11,5 @@ export const NAV_LINKS: NavLink[] = [
   { href: "/settings/profile", label: "Profil" },
   { href: "/settings/workspace", label: "Espace de travail", permission: "workspace.manage" },
   { href: "/settings/team", label: "Équipe", permission: "members.view" },
+  { href: "/settings/knowledge", label: "Base de connaissances", permission: "knowledge.view" },
 ];
