@@ -1,0 +1,80 @@
+@import "tailwindcss";
+
+/*
+ * Jetons de design centralisés : une palette restreinte, redéfinie sous le
+ * thème sombre. Tout composant s'appuie sur ces variables plutôt que sur une
+ * couleur Tailwind codée en dur, pour que le thème se change à un seul
+ * endroit.
+ */
+:root {
+  --background: #fafafa;
+  --surface: #ffffff;
+  --foreground: #18181b;
+  --muted: #6b7280;
+  --border: #e4e4e7;
+  --border-strong: #d4d4d8;
+  --primary: #0f766e;
+  --primary-foreground: #ffffff;
+  --primary-hover: #0d5f59;
+  --danger: #b91c1c;
+  --danger-surface: #fef2f2;
+  --success: #15803d;
+  --success-surface: #f0fdf4;
+  --focus-ring: #0f766e;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --surface: #151517;
+    --foreground: #f4f4f5;
+    --muted: #a1a1aa;
+    --border: #27272a;
+    --border-strong: #3f3f46;
+    --primary: #2dd4bf;
+    --primary-foreground: #052e2b;
+    --primary-hover: #5eead4;
+    --danger: #f87171;
+    --danger-surface: #2a1414;
+    --success: #4ade80;
+    --success-surface: #112017;
+    --focus-ring: #2dd4bf;
+  }
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-hover: var(--primary-hover);
+  --color-danger: var(--danger);
+  --color-danger-surface: var(--danger-surface);
+  --color-success: var(--success);
+  --color-success-surface: var(--success-surface);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+}
+
+/* Cible tactile de 44px minimum et anneau de focus visible, partout. */
+button,
+a,
+input,
+select,
+textarea {
+  min-height: 44px;
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
