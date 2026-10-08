@@ -40,8 +40,13 @@ export function useKnowledgePage() {
   const [searchError, setSearchError] = useState<ApiError | null>(null);
   const [isSearching, setIsSearching] = useState(false);
 
+  // Lu par des callbacks stables (`load`, `reloadDocuments`) qui ne doivent
+  // pas se recréer à chaque changement de filtre : la ref est tenue à jour
+  // par un effet, jamais écrite pendant le rendu lui-même.
   const statusFilterRef = useRef(documentStatusFilter);
-  statusFilterRef.current = documentStatusFilter;
+  useEffect(() => {
+    statusFilterRef.current = documentStatusFilter;
+  }, [documentStatusFilter]);
 
   const load = useCallback(async () => {
     try {
