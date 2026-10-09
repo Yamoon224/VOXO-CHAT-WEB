@@ -12,6 +12,12 @@ export function Sidebar({ className = "" }: { className?: string }) {
 
   const links = NAV_LINKS.filter((link) => !link.permission || permissions.includes(link.permission));
 
+  // Compte, pas espace de travail : ne peut pas se filtrer par permission
+  // d'espace comme le reste de `NAV_LINKS` (voir `is_platform_admin`).
+  if (session?.user.is_platform_admin) {
+    links.push({ href: "/platform/workspaces", label: "Console plateforme" });
+  }
+
   return (
     <nav aria-label="Navigation principale" className={`flex flex-col gap-1 ${className}`}>
       {links.map((link) => {

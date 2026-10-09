@@ -9,6 +9,7 @@ export type NavLink = { href: string; label: string; permission?: string };
 export const NAV_LINKS: NavLink[] = [
   { href: "/dashboard", label: "Tableau de bord" },
   { href: "/conversations", label: "Conversations", permission: "conversations.view" },
+  { href: "/analytics", label: "Statistiques", permission: "analytics.view" },
   { href: "/settings/profile", label: "Profil" },
   { href: "/settings/workspace", label: "Espace de travail", permission: "workspace.manage" },
   { href: "/settings/team", label: "Équipe", permission: "members.view" },
@@ -16,4 +17,5 @@ export const NAV_LINKS: NavLink[] = [
   { href: "/settings/canned-responses", label: "Réponses pré-enregistrées", permission: "canned_responses.manage" },
   { href: "/settings/widget", label: "Widget", permission: "widget.manage" },
   { href: "/settings/assistant", label: "Agent IA", permission: "assistant.manage" },
+  { href: "/settings/billing", label: "Facturation", permission: "billing.view" },
 ];
