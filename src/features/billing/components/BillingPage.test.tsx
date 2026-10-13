@@ -28,7 +28,9 @@ const free: Plan = {
   ai_credits_per_month: 100,
   max_knowledge_documents: 20,
   is_custom: false,
+  is_active: true,
   sort_order: 0,
+  provider_price_id: null,
 };
 
 const business: Plan = {
@@ -43,7 +45,9 @@ const business: Plan = {
   ai_credits_per_month: 5000,
   max_knowledge_documents: 1000,
   is_custom: false,
+  is_active: true,
   sort_order: 2,
+  provider_price_id: null,
 };
 
 const subscription: Subscription = {

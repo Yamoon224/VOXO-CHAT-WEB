@@ -16,6 +16,7 @@ export function Sidebar({ className = "" }: { className?: string }) {
   // d'espace comme le reste de `NAV_LINKS` (voir `is_platform_admin`).
   if (session?.user.is_platform_admin) {
     links.push({ href: "/platform/workspaces", label: "Console plateforme" });
+    links.push({ href: "/platform/plans", label: "Paliers tarifaires" });
   }
 
   return (

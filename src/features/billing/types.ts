@@ -18,7 +18,26 @@ export type Plan = {
   ai_credits_per_month: number | null;
   max_knowledge_documents: number | null;
   is_custom: boolean;
+  is_active: boolean;
   sort_order: number;
+  provider_price_id: string | null;
+};
+
+/** Création ou modification d'un palier (console plateforme) : tous les champs sont requis à la création. */
+export type PlanWriteInput = {
+  slug: string;
+  name: string;
+  price_cents: number | null;
+  currency: string;
+  billing_interval: BillingInterval;
+  max_seats: number | null;
+  max_contacts: number | null;
+  ai_credits_per_month: number | null;
+  max_knowledge_documents: number | null;
+  is_custom: boolean;
+  is_active: boolean;
+  sort_order: number;
+  provider_price_id: string | null;
 };
 
 export type Subscription = {
