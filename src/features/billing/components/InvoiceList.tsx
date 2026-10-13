@@ -32,6 +32,16 @@ export function InvoiceList({ invoices }: { invoices: Invoice[] }) {
                 Consulter
               </a>
             )}
+            {invoice.invoice_pdf_url && (
+              <a
+                href={invoice.invoice_pdf_url}
+                target="_blank"
+                rel="noreferrer"
+                className="text-sm font-medium text-primary hover:underline"
+              >
+                PDF
+              </a>
+            )}
           </div>
         </li>
       ))}

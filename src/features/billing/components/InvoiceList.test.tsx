@@ -9,6 +9,7 @@ const paid: Invoice = {
   currency: "EUR",
   status: "paid",
   hosted_invoice_url: "https://stripe.test/invoice/1",
+  invoice_pdf_url: "https://stripe.test/invoice/1.pdf",
   issued_at: "2026-10-01T00:00:00Z",
   paid_at: "2026-10-01T00:00:00Z",
 };
@@ -20,10 +21,11 @@ describe("InvoiceList", () => {
     expect(screen.getByText("49,00 €")).toBeInTheDocument();
     expect(screen.getByText("Payée")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Consulter" })).toHaveAttribute("href", "https://stripe.test/invoice/1");
+    expect(screen.getByRole("link", { name: "PDF" })).toHaveAttribute("href", "https://stripe.test/invoice/1.pdf");
   });
 
-  it("n'affiche pas de lien sans page hébergée", () => {
-    render(<InvoiceList invoices={[{ ...paid, hosted_invoice_url: null }]} />);
+  it("n'affiche aucun lien sans page hébergée ni PDF", () => {
+    render(<InvoiceList invoices={[{ ...paid, hosted_invoice_url: null, invoice_pdf_url: null }]} />);
 
     expect(screen.queryByRole("link")).not.toBeInTheDocument();
   });

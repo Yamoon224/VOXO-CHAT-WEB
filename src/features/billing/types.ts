@@ -58,6 +58,7 @@ export type Invoice = {
   currency: string;
   status: InvoiceStatus;
   hosted_invoice_url: string | null;
+  invoice_pdf_url: string | null;
   issued_at: string | null;
   paid_at: string | null;
 };
