@@ -7,6 +7,11 @@ export const metadata: Metadata = {
   description: "Un palier gratuit, des paliers payants par sièges, contacts et crédits IA, une offre sur devis.",
 };
 
+// Grille tarifaire récupérée à chaque requête (changements rares, mais gérés
+// par un admin plateforme à tout moment) : route bloquante plutôt que
+// prérendue, même échappatoire que `(app)`/`(auth)` pour une page dynamique.
+export const instant = false;
+
 export default async function TarifsRoutePage() {
   const { data: plans } = await listPublicPlans();
 
