@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import * as conversationsApi from "@/features/conversations/api";
 import * as teamApi from "@/features/team/api";
+import * as ticketsApi from "@/features/tickets/api";
 import { ApiError } from "@/lib/api/errors";
 import type { CannedResponse, Conversation, ConversationStatus, Message, MessageVisibility } from "@/features/conversations/types";
 import type { Member } from "@/features/team/types";
@@ -17,6 +19,7 @@ const POLL_INTERVAL_MS = 4000;
  * temps réel pour l'instant, voir la note de portée du lot 2).
  */
 export function useConversationDetailPage(conversationId: string) {
+  const router = useRouter();
   const [loadState, setLoadState] = useState<LoadState>({ status: "loading" });
   const [conversation, setConversation] = useState<Conversation | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -99,6 +102,17 @@ export function useConversationDetailPage(conversationId: string) {
     }
   }
 
+  /** Transforme la conversation en ticket, et file directement sur son écran de suivi. */
+  async function openTicket() {
+    setActionError(null);
+    try {
+      const { data } = await ticketsApi.openTicketFromConversation(conversationId);
+      router.push(`/tickets/${data.id}`);
+    } catch (caught) {
+      setActionError(caught instanceof ApiError ? caught : ApiError.networkError());
+    }
+  }
+
   return {
     loadState,
     conversation,
@@ -111,5 +125,6 @@ export function useConversationDetailPage(conversationId: string) {
     reply,
     summarize,
     analyzeSentiment,
+    openTicket,
   };
 }

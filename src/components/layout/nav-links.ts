@@ -9,6 +9,7 @@ export type NavLink = { href: string; label: string; permission?: string };
 export const NAV_LINKS: NavLink[] = [
   { href: "/dashboard", label: "Tableau de bord" },
   { href: "/conversations", label: "Conversations", permission: "conversations.view" },
+  { href: "/tickets", label: "Tickets", permission: "tickets.view" },
   { href: "/contacts", label: "Contacts", permission: "contacts.view" },
   { href: "/analytics", label: "Statistiques", permission: "analytics.view" },
   { href: "/settings/profile", label: "Profil" },

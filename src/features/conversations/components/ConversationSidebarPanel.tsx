@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+import Link from "next/link";
 import { Badge, Button, Card } from "@/components/ui";
 import type { Conversation, ConversationStatus } from "@/features/conversations/types";
 import type { Member } from "@/features/team/types";
@@ -14,19 +16,33 @@ export function ConversationSidebarPanel({
   conversation,
   members,
   canManage,
+  canOpenTicket,
   onChangeStatus,
   onAssign,
   onSummarize,
   onAnalyzeSentiment,
+  onOpenTicket,
 }: {
   conversation: Conversation;
   members: Member[];
   canManage: boolean;
+  canOpenTicket: boolean;
   onChangeStatus: (status: ConversationStatus) => void;
   onAssign: (userId: string | null) => void;
   onSummarize: () => void;
   onAnalyzeSentiment: () => void;
+  onOpenTicket: () => void;
 }) {
+  const [isOpeningTicket, setIsOpeningTicket] = useState(false);
+
+  async function handleOpenTicket() {
+    setIsOpeningTicket(true);
+    try {
+      await onOpenTicket();
+    } finally {
+      setIsOpeningTicket(false);
+    }
+  }
   return (
     <div className="flex flex-col gap-4">
       <Card>
@@ -88,6 +104,21 @@ export function ConversationSidebarPanel({
               </Button>
             </div>
           </div>
+        </Card>
+      )}
+
+      {canOpenTicket && (
+        <Card>
+          <h2 className="mb-3 text-sm font-semibold text-foreground">Ticket</h2>
+          <p className="mb-3 text-sm text-muted">
+            Priorité, échéance SLA, et un lien de suivi envoyé au client, sans quitter cette conversation.
+          </p>
+          <Button variant="secondary" type="button" onClick={handleOpenTicket} isLoading={isOpeningTicket}>
+            Ouvrir un ticket
+          </Button>
+          <Link href="/tickets" className="ml-3 text-sm font-medium text-primary hover:underline">
+            Voir tous les tickets
+          </Link>
         </Card>
       )}
     </div>

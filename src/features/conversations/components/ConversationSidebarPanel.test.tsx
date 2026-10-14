@@ -40,10 +40,12 @@ describe("ConversationSidebarPanel", () => {
         conversation={conversation}
         members={members}
         canManage
+        canOpenTicket
         onChangeStatus={onChangeStatus}
         onAssign={onAssign}
         onSummarize={vi.fn()}
         onAnalyzeSentiment={vi.fn()}
+        onOpenTicket={vi.fn()}
       />,
     );
 
@@ -67,10 +69,12 @@ describe("ConversationSidebarPanel", () => {
         conversation={conversation}
         members={members}
         canManage
+        canOpenTicket={false}
         onChangeStatus={vi.fn()}
         onAssign={vi.fn()}
         onSummarize={onSummarize}
         onAnalyzeSentiment={onAnalyzeSentiment}
+        onOpenTicket={vi.fn()}
       />,
     );
 
@@ -87,15 +91,58 @@ describe("ConversationSidebarPanel", () => {
         conversation={conversation}
         members={members}
         canManage={false}
+        canOpenTicket={false}
         onChangeStatus={vi.fn()}
         onAssign={vi.fn()}
         onSummarize={vi.fn()}
         onAnalyzeSentiment={vi.fn()}
+        onOpenTicket={vi.fn()}
       />,
     );
 
     const selects = screen.getAllByRole("combobox");
     selects.forEach((select) => expect(select).toBeDisabled());
     expect(screen.queryByRole("button", { name: "Résumer" })).not.toBeInTheDocument();
+  });
+
+  it("ouvre un ticket quand l'appelant a la permission tickets.manage", async () => {
+    const onOpenTicket = vi.fn().mockResolvedValue(undefined);
+    const user = userEvent.setup();
+
+    render(
+      <ConversationSidebarPanel
+        conversation={conversation}
+        members={members}
+        canManage
+        canOpenTicket
+        onChangeStatus={vi.fn()}
+        onAssign={vi.fn()}
+        onSummarize={vi.fn()}
+        onAnalyzeSentiment={vi.fn()}
+        onOpenTicket={onOpenTicket}
+      />,
+    );
+
+    await user.click(screen.getByRole("button", { name: "Ouvrir un ticket" }));
+
+    expect(onOpenTicket).toHaveBeenCalled();
+  });
+
+  it("n'offre pas d'ouvrir de ticket sans la permission tickets.manage", () => {
+    render(
+      <ConversationSidebarPanel
+        conversation={conversation}
+        members={members}
+        canManage
+        canOpenTicket={false}
+        onChangeStatus={vi.fn()}
+        onAssign={vi.fn()}
+        onSummarize={vi.fn()}
+        onAnalyzeSentiment={vi.fn()}
+        onOpenTicket={vi.fn()}
+      />,
+    );
+
+    expect(screen.queryByRole("button", { name: "Ouvrir un ticket" })).not.toBeInTheDocument();
   });
 });

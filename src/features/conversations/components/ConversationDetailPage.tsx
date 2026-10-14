@@ -9,10 +9,23 @@ import { ConversationSidebarPanel } from "@/features/conversations/components/Co
 
 export function ConversationDetailPage({ conversationId }: { conversationId: string }) {
   const { session } = useSession();
-  const { loadState, conversation, messages, members, cannedResponses, actionError, changeStatus, assign, reply, summarize, analyzeSentiment } =
-    useConversationDetailPage(conversationId);
+  const {
+    loadState,
+    conversation,
+    messages,
+    members,
+    cannedResponses,
+    actionError,
+    changeStatus,
+    assign,
+    reply,
+    summarize,
+    analyzeSentiment,
+    openTicket,
+  } = useConversationDetailPage(conversationId);
 
   const canManage = session?.permissions.includes("conversations.manage") ?? false;
+  const canOpenTicket = session?.permissions.includes("tickets.manage") ?? false;
 
   if (loadState.status === "loading") {
     return (
@@ -48,10 +61,12 @@ export function ConversationDetailPage({ conversationId }: { conversationId: str
           conversation={conversation}
           members={members}
           canManage={canManage}
+          canOpenTicket={canOpenTicket}
           onChangeStatus={changeStatus}
           onAssign={assign}
           onSummarize={summarize}
           onAnalyzeSentiment={analyzeSentiment}
+          onOpenTicket={openTicket}
         />
       </div>
     </div>
