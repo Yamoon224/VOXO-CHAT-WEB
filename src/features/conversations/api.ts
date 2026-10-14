@@ -1,5 +1,6 @@
 import { apiFetch } from "@/lib/api/client";
 import type {
+  AiSuggestion,
   CannedResponse,
   Conversation,
   ConversationStatus,
@@ -32,6 +33,10 @@ export function summarize(conversationId: string): Promise<{ data: Conversation 
 
 export function analyzeSentiment(conversationId: string): Promise<{ data: Conversation }> {
   return apiFetch(`/workspace/conversations/${conversationId}/sentiment`, { method: "POST" });
+}
+
+export function suggestReply(conversationId: string): Promise<{ data: AiSuggestion }> {
+  return apiFetch(`/workspace/conversations/${conversationId}/suggest-reply`, { method: "POST" });
 }
 
 export function listMessages(conversationId: string): Promise<{ data: Message[] }> {

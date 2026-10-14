@@ -1,17 +1,35 @@
 "use client";
 
+import { useState } from "react";
 import { Alert, Button } from "@/components/ui";
 import { useReplyForm } from "@/features/conversations/components/useReplyForm";
-import type { CannedResponse, MessageVisibility } from "@/features/conversations/types";
+import type { AiSuggestion, CannedResponse, MessageVisibility } from "@/features/conversations/types";
 
 export function ReplyForm({
   cannedResponses,
   onSubmit,
+  onSuggestReply,
 }: {
   cannedResponses: CannedResponse[];
   onSubmit: (body: string, visibility: MessageVisibility) => Promise<void>;
+  onSuggestReply: () => Promise<AiSuggestion | null>;
 }) {
   const { body, setBody, visibility, setVisibility, isSubmitting, error, handleSubmit } = useReplyForm(onSubmit);
+  const [isSuggesting, setIsSuggesting] = useState(false);
+  const [suggestionCitations, setSuggestionCitations] = useState<AiSuggestion["citations"]>([]);
+
+  async function handleSuggestReply() {
+    setIsSuggesting(true);
+    try {
+      const suggestion = await onSuggestReply();
+      if (suggestion) {
+        setBody(suggestion.content);
+        setSuggestionCitations(suggestion.citations);
+      }
+    } finally {
+      setIsSuggesting(false);
+    }
+  }
 
   return (
     <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-3">
@@ -44,9 +62,14 @@ export function ReplyForm({
       )}
 
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="reply-body" className="text-sm font-medium text-foreground">
-          Message
-        </label>
+        <div className="flex items-center justify-between">
+          <label htmlFor="reply-body" className="text-sm font-medium text-foreground">
+            Message
+          </label>
+          <Button variant="secondary" type="button" onClick={handleSuggestReply} isLoading={isSuggesting}>
+            Suggérer une réponse
+          </Button>
+        </div>
         <textarea
           id="reply-body"
           required
@@ -55,6 +78,23 @@ export function ReplyForm({
           onChange={(event) => setBody(event.target.value)}
           className="rounded-md border border-border-strong bg-surface px-3 py-2 text-sm text-foreground"
         />
+        {suggestionCitations.length > 0 && (
+          <ul className="flex flex-col gap-1 border-t border-border pt-2">
+            {suggestionCitations.map((citation, index) => (
+              <li key={index} className="text-xs text-muted">
+                Source : {citation.title}
+                {citation.citation_url && (
+                  <>
+                    {" — "}
+                    <a href={citation.citation_url} target="_blank" rel="noreferrer" className="text-primary">
+                      {citation.citation_url}
+                    </a>
+                  </>
+                )}
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
 
       <div className="flex items-center justify-between gap-3">

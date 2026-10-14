@@ -58,6 +58,14 @@ export function createSegment(name: string, criteria: ContactSegment["criteria"]
   return apiFetch("/workspace/contact-segments", { method: "POST", body: { name, criteria } });
 }
 
+export function updateSegment(
+  segmentId: string,
+  name: string,
+  criteria: ContactSegment["criteria"],
+): Promise<{ data: ContactSegment }> {
+  return apiFetch(`/workspace/contact-segments/${segmentId}`, { method: "PUT", body: { name, criteria } });
+}
+
 export function deleteSegment(segmentId: string): Promise<void> {
   return apiFetch(`/workspace/contact-segments/${segmentId}`, { method: "DELETE" });
 }

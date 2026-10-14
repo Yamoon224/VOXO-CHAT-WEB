@@ -4,7 +4,7 @@ import * as conversationsApi from "@/features/conversations/api";
 import * as teamApi from "@/features/team/api";
 import * as ticketsApi from "@/features/tickets/api";
 import { ApiError } from "@/lib/api/errors";
-import type { CannedResponse, Conversation, ConversationStatus, Message, MessageVisibility } from "@/features/conversations/types";
+import type { AiSuggestion, CannedResponse, Conversation, ConversationStatus, Message, MessageVisibility } from "@/features/conversations/types";
 import type { Member } from "@/features/team/types";
 
 type LoadState = { status: "loading" } | { status: "error"; error: ApiError } | { status: "ready" };
@@ -102,6 +102,18 @@ export function useConversationDetailPage(conversationId: string) {
     }
   }
 
+  /** Copilote (section 2.2) : une suggestion pour `ReplyForm`, jamais envoyée elle-même. */
+  async function suggestReply(): Promise<AiSuggestion | null> {
+    setActionError(null);
+    try {
+      const { data } = await conversationsApi.suggestReply(conversationId);
+      return data;
+    } catch (caught) {
+      setActionError(caught instanceof ApiError ? caught : ApiError.networkError());
+      return null;
+    }
+  }
+
   /** Transforme la conversation en ticket, et file directement sur son écran de suivi. */
   async function openTicket() {
     setActionError(null);
@@ -125,6 +137,7 @@ export function useConversationDetailPage(conversationId: string) {
     reply,
     summarize,
     analyzeSentiment,
+    suggestReply,
     openTicket,
   };
 }

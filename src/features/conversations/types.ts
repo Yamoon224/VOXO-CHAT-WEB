@@ -45,6 +45,13 @@ export type CannedResponse = {
   created_at: string;
 };
 
+/** Copilote (section 2.2) : une suggestion, jamais envoyée automatiquement. */
+export type AiSuggestion = {
+  content: string;
+  citations: { title: string; content: string; citation_url: string | null }[];
+  confidence: number;
+};
+
 type PaginationMeta = { current_page: number; last_page: number; per_page: number; total: number };
 
 export type PaginatedConversations = { data: Conversation[]; meta: PaginationMeta };

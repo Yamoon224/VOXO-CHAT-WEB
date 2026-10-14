@@ -21,6 +21,7 @@ export function ConversationDetailPage({ conversationId }: { conversationId: str
     reply,
     summarize,
     analyzeSentiment,
+    suggestReply,
     openTicket,
   } = useConversationDetailPage(conversationId);
 
@@ -52,7 +53,7 @@ export function ConversationDetailPage({ conversationId }: { conversationId: str
 
           {canManage && (
             <Card>
-              <ReplyForm cannedResponses={cannedResponses} onSubmit={reply} />
+              <ReplyForm cannedResponses={cannedResponses} onSubmit={reply} onSuggestReply={suggestReply} />
             </Card>
           )}
         </div>
