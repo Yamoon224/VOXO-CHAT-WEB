@@ -17,6 +17,7 @@ export const NAV_LINKS: NavLink[] = [
   { href: "/settings/knowledge", label: "Base de connaissances", permission: "knowledge.view" },
   { href: "/settings/canned-responses", label: "Réponses pré-enregistrées", permission: "canned_responses.manage" },
   { href: "/settings/widget", label: "Widget", permission: "widget.manage" },
+  { href: "/settings/channels", label: "Canaux", permission: "channels.manage" },
   { href: "/settings/assistant", label: "Agent IA", permission: "assistant.manage" },
   { href: "/settings/billing", label: "Facturation", permission: "billing.view" },
 ];
