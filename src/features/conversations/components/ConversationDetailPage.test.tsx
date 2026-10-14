@@ -8,6 +8,9 @@ import * as conversationsApi from "@/features/conversations/api";
 import * as teamApi from "@/features/team/api";
 import type { Conversation, Message } from "@/features/conversations/types";
 
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ push: vi.fn() }),
+}));
 vi.mock("@/features/auth/api");
 vi.mock("@/features/conversations/api");
 vi.mock("@/features/team/api");

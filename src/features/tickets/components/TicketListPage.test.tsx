@@ -1,5 +1,5 @@
 import { describe, expect, it, vi, beforeEach } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { TicketListPage } from "@/features/tickets/components/TicketListPage";
 import * as ticketsApi from "@/features/tickets/api";
 import type { Ticket } from "@/features/tickets/types";
@@ -42,7 +42,7 @@ describe("TicketListPage", () => {
     render(<TicketListPage />);
 
     expect(await screen.findByText("Problème de livraison")).toBeInTheDocument();
-    expect(screen.getByText("Urgente")).toBeInTheDocument();
+    expect(within(screen.getByRole("list")).getByText("Urgente")).toBeInTheDocument();
   });
 
   it("affiche un etat vide sans ticket", async () => {
