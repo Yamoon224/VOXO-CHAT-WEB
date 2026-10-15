@@ -3,15 +3,28 @@ import type {
   AiSuggestion,
   CannedResponse,
   Conversation,
+  ConversationChannel,
   ConversationStatus,
+  InboxView,
+  InboxViewFilters,
   Message,
   MessageVisibility,
   PaginatedConversations,
+  RoutingActionType,
+  RoutingCondition,
+  RoutingRule,
 } from "@/features/conversations/types";
 
-export function listConversations(filters: { status?: ConversationStatus | ""; needsHuman?: boolean } = {}): Promise<PaginatedConversations> {
+export function listConversations(
+  filters: { status?: ConversationStatus | ""; needsHuman?: boolean; channel?: ConversationChannel | ""; assignedUserId?: string } = {},
+): Promise<PaginatedConversations> {
   return apiFetch("/workspace/conversations", {
-    query: { status: filters.status || undefined, needs_human: filters.needsHuman ?? undefined },
+    query: {
+      status: filters.status || undefined,
+      needs_human: filters.needsHuman ?? undefined,
+      channel: filters.channel || undefined,
+      assigned_user_id: filters.assignedUserId || undefined,
+    },
   });
 }
 
@@ -61,4 +74,45 @@ export function updateCannedResponse(id: string, title: string, body: string): P
 
 export function deleteCannedResponse(id: string): Promise<void> {
   return apiFetch(`/workspace/canned-responses/${id}`, { method: "DELETE" });
+}
+
+export function listRoutingRules(): Promise<{ data: RoutingRule[] }> {
+  return apiFetch("/workspace/routing-rules");
+}
+
+export type RoutingRulePayload = {
+  name: string;
+  position?: number;
+  is_active?: boolean;
+  conditions?: RoutingCondition[];
+  action_type: RoutingActionType;
+  assignee_user_ids: string[];
+};
+
+export function createRoutingRule(payload: RoutingRulePayload): Promise<{ data: RoutingRule }> {
+  return apiFetch("/workspace/routing-rules", { method: "POST", body: payload });
+}
+
+export function updateRoutingRule(id: string, payload: RoutingRulePayload): Promise<{ data: RoutingRule }> {
+  return apiFetch(`/workspace/routing-rules/${id}`, { method: "PUT", body: payload });
+}
+
+export function deleteRoutingRule(id: string): Promise<void> {
+  return apiFetch(`/workspace/routing-rules/${id}`, { method: "DELETE" });
+}
+
+export function listInboxViews(): Promise<{ data: InboxView[] }> {
+  return apiFetch("/workspace/inbox-views");
+}
+
+export function createInboxView(name: string, filters: InboxViewFilters, position = 0): Promise<{ data: InboxView }> {
+  return apiFetch("/workspace/inbox-views", { method: "POST", body: { name, filters, position } });
+}
+
+export function updateInboxView(id: string, name: string, filters: InboxViewFilters, position = 0): Promise<{ data: InboxView }> {
+  return apiFetch(`/workspace/inbox-views/${id}`, { method: "PUT", body: { name, filters, position } });
+}
+
+export function deleteInboxView(id: string): Promise<void> {
+  return apiFetch(`/workspace/inbox-views/${id}`, { method: "DELETE" });
 }
