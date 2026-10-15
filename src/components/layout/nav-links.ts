@@ -20,6 +20,7 @@ export const NAV_LINKS: NavLink[] = [
   { href: "/settings/widget", label: "Widget", permission: "widget.manage" },
   { href: "/settings/channels", label: "Canaux", permission: "channels.manage" },
   { href: "/settings/routing-rules", label: "Routage", permission: "routing.manage" },
+  { href: "/settings/automations", label: "Automatisations", permission: "automations.manage" },
   { href: "/settings/help-center", label: "Centre d'aide", permission: "help_center.view" },
   { href: "/settings/assistant", label: "Agent IA", permission: "assistant.manage" },
   { href: "/settings/billing", label: "Facturation", permission: "billing.view" },
