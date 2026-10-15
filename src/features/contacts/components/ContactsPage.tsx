@@ -25,6 +25,12 @@ export function ContactsPage() {
     <div className="flex flex-col gap-6">
       {actionError && <Alert variant="error">{actionError.message}</Alert>}
 
+      <div>
+        <Link href="/contacts/segments" className="text-sm font-medium text-primary hover:underline">
+          Gérer les segments →
+        </Link>
+      </div>
+
       <Card>
         <h2 className="mb-4 text-sm font-semibold text-foreground">Nouveau contact</h2>
         <ContactForm onSubmit={create} />
