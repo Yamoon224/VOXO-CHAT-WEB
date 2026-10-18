@@ -18,6 +18,10 @@ const CHANNEL_LABELS: Record<string, string> = {
   instagram: "Instagram",
   telegram: "Telegram",
   sms: "SMS",
+  x: "X",
+  viber: "Viber",
+  line: "Line",
+  telephony: "Téléphonie",
 };
 
 /** Section « Activité par agent » (section 2.12). */

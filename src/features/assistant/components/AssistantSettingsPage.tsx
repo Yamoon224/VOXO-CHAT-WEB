@@ -4,6 +4,7 @@ import { Alert, Card, Spinner } from "@/components/ui";
 import { useAssistantSettingsPage } from "@/features/assistant/components/useAssistantSettingsPage";
 import { AssistantSettingsForm } from "@/features/assistant/components/AssistantSettingsForm";
 import { SandboxPanel } from "@/features/assistant/components/SandboxPanel";
+import { AgentToolsPage } from "@/features/assistant/components/AgentToolsPage";
 
 /** Écran `/settings/assistant` : réglages de l'agent IA et bac à sable. */
 export function AssistantSettingsPage() {
@@ -35,6 +36,11 @@ export function AssistantSettingsPage() {
       <Card>
         <h2 className="mb-4 text-sm font-semibold text-foreground">Bac à sable</h2>
         <SandboxPanel reply={sandboxReply} error={sandboxError} isTesting={isTesting} onTest={testSandbox} />
+      </Card>
+
+      <Card>
+        <h2 className="mb-4 text-sm font-semibold text-foreground">Outils (actions sur API)</h2>
+        <AgentToolsPage />
       </Card>
     </div>
   );

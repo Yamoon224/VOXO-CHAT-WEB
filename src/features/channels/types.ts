@@ -4,8 +4,12 @@ export type ChannelEmailSettings = {
   reply_from_name: string | null;
 };
 
-/** Canaux de messagerie du lot 5 (section 2.5, P2) : un connecteur par prestataire, derrière `ChannelConnection`. */
-export type MessagingChannel = "whatsapp" | "messenger" | "instagram" | "telegram" | "sms";
+/**
+ * Canaux de messagerie des lots 5 et 7 (section 2.5, P2/P3) : un connecteur
+ * par prestataire, derrière `ChannelConnection`. `telephony` est un journal
+ * d'appels (pas de téléphonie temps réel).
+ */
+export type MessagingChannel = "whatsapp" | "messenger" | "instagram" | "telegram" | "sms" | "x" | "viber" | "line" | "telephony";
 
 export type ChannelConnection = {
   channel: MessagingChannel;
@@ -41,6 +45,20 @@ export const CHANNEL_CREDENTIAL_FIELDS: Record<MessagingChannel, { key: string; 
     { key: "auth_token", label: "Jeton d'authentification" },
     { key: "from_number", label: "Numéro d'envoi" },
   ],
+  x: [
+    { key: "consumer_secret", label: "Secret consommateur" },
+    { key: "access_token", label: "Jeton d'accès" },
+  ],
+  viber: [{ key: "auth_token", label: "Jeton d'authentification du bot" }],
+  line: [
+    { key: "channel_access_token", label: "Jeton d'accès du canal" },
+    { key: "channel_secret", label: "Secret du canal" },
+  ],
+  telephony: [
+    { key: "account_sid", label: "SID du compte" },
+    { key: "auth_token", label: "Jeton d'authentification" },
+    { key: "caller_number", label: "Numéro de rappel" },
+  ],
 };
 
 export const CHANNEL_LABELS: Record<MessagingChannel, string> = {
@@ -49,6 +67,10 @@ export const CHANNEL_LABELS: Record<MessagingChannel, string> = {
   instagram: "Instagram",
   telegram: "Telegram",
   sms: "SMS",
+  x: "X",
+  viber: "Viber",
+  line: "Line",
+  telephony: "Téléphonie (journal d'appels)",
 };
 
 /** WhatsApp/Messenger/Instagram passent par le webhook unifié de Meta : un `verify_token` à copier dans sa console. */
@@ -57,4 +79,14 @@ export const CHANNELS_WITH_META_HANDSHAKE: ReadonlySet<MessagingChannel> = new S
 /** Telegram vérifie chaque webhook par un en-tête secret à reporter dans l'appel `setWebhook` (`secret_token`), engendré à la création. */
 export const CHANNELS_WITH_SECRET_TOKEN: ReadonlySet<MessagingChannel> = new Set(["telegram"]);
 
-export const MESSAGING_CHANNELS: MessagingChannel[] = ["whatsapp", "messenger", "instagram", "telegram", "sms"];
+export const MESSAGING_CHANNELS: MessagingChannel[] = [
+  "whatsapp",
+  "messenger",
+  "instagram",
+  "telegram",
+  "sms",
+  "x",
+  "viber",
+  "line",
+  "telephony",
+];

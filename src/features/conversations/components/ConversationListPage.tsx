@@ -24,6 +24,10 @@ const CHANNEL_OPTIONS: { value: ConversationChannel | ""; label: string }[] = [
   { value: "instagram", label: "Instagram" },
   { value: "telegram", label: "Telegram" },
   { value: "sms", label: "SMS" },
+  { value: "x", label: "X" },
+  { value: "viber", label: "Viber" },
+  { value: "line", label: "Line" },
+  { value: "telephony", label: "Téléphonie" },
 ];
 
 /** Écran `/conversations` : boîte de réception partagée de l'espace courant, avec ses sous-boîtes (lot 5, section 2.4). */

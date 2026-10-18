@@ -1,6 +1,19 @@
 export type ConversationStatus = "open" | "pending" | "resolved";
 
-export type ConversationChannel = "widget" | "email" | "contact_form" | "ticket" | "whatsapp" | "messenger" | "instagram" | "telegram" | "sms";
+export type ConversationChannel =
+  | "widget"
+  | "email"
+  | "contact_form"
+  | "ticket"
+  | "whatsapp"
+  | "messenger"
+  | "instagram"
+  | "telegram"
+  | "sms"
+  | "x"
+  | "viber"
+  | "line"
+  | "telephony";
 
 export type MessageSenderType = "visitor" | "agent" | "ai" | "system";
 
