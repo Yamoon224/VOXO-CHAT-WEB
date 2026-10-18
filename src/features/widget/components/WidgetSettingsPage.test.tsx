@@ -20,6 +20,7 @@ describe("WidgetSettingsPage", () => {
         language: "fr",
         business_hours: null,
         offline_message: null,
+        hide_branding: false,
       },
     });
     vi.mocked(widgetApi.getScript).mockResolvedValue({ data: { script: "<script>window.VoxoWidgetConfig</script>" } });

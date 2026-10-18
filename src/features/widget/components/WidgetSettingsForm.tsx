@@ -27,6 +27,8 @@ export function WidgetSettingsForm({
     setWelcomeMessage,
     offlineMessage,
     setOfflineMessage,
+    hideBranding,
+    setHideBranding,
     days,
     toggleDay,
     setDayTime,
@@ -107,6 +109,11 @@ export function WidgetSettingsForm({
           ))}
         </div>
       </div>
+
+      <label className="flex items-center gap-2 text-sm text-foreground">
+        <input type="checkbox" checked={hideBranding} onChange={(event) => setHideBranding(event.target.checked)} />
+        Masquer la mention VOXO (marque blanche)
+      </label>
 
       <div>
         <Button type="submit" isLoading={isSubmitting}>

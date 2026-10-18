@@ -21,6 +21,7 @@ export const NAV_LINKS: NavLink[] = [
   { href: "/settings/channels", label: "Canaux", permission: "channels.manage" },
   { href: "/settings/routing-rules", label: "Routage", permission: "routing.manage" },
   { href: "/settings/automations", label: "Automatisations", permission: "automations.manage" },
+  { href: "/settings/campaigns", label: "Campagnes", permission: "campaigns.manage" },
   { href: "/settings/integrations", label: "Intégrations", permission: "integrations.manage" },
   { href: "/settings/help-center", label: "Centre d'aide", permission: "help_center.view" },
   { href: "/settings/assistant", label: "Agent IA", permission: "assistant.manage" },

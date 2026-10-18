@@ -19,6 +19,7 @@ export function useWidgetSettingsForm(settings: WidgetSettings, update: (payload
   const [position, setPosition] = useState<WidgetPosition>(settings.position);
   const [welcomeMessage, setWelcomeMessage] = useState(settings.welcome_message ?? "");
   const [offlineMessage, setOfflineMessage] = useState(settings.offline_message ?? "");
+  const [hideBranding, setHideBranding] = useState(settings.hide_branding);
   const [days, setDays] = useState<DayRow[]>(rowsFromSlots(settings.business_hours));
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<ApiError | null>(null);
@@ -47,6 +48,7 @@ export function useWidgetSettingsForm(settings: WidgetSettings, update: (payload
         welcome_message: welcomeMessage || null,
         offline_message: offlineMessage || null,
         business_hours: businessHours.length > 0 ? businessHours : null,
+        hide_branding: hideBranding,
       });
     } catch (caught) {
       setError(caught instanceof ApiError ? caught : ApiError.networkError());
@@ -64,6 +66,8 @@ export function useWidgetSettingsForm(settings: WidgetSettings, update: (payload
     setWelcomeMessage,
     offlineMessage,
     setOfflineMessage,
+    hideBranding,
+    setHideBranding,
     days,
     toggleDay,
     setDayTime,

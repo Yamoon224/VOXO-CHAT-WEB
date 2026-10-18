@@ -12,6 +12,7 @@ const settings: WidgetSettings = {
   language: "fr",
   business_hours: null,
   offline_message: null,
+  hide_branding: false,
 };
 
 describe("WidgetSettingsForm", () => {
@@ -42,5 +43,17 @@ describe("WidgetSettingsForm", () => {
     expect(update).toHaveBeenCalledWith(
       expect.objectContaining({ business_hours: [{ day: 1, opens_at: "09:00", closes_at: "18:00" }] }),
     );
+  });
+
+  it("active la marque blanche", async () => {
+    const update = vi.fn().mockResolvedValue(undefined);
+    const user = userEvent.setup();
+
+    render(<WidgetSettingsForm settings={settings} update={update} />);
+
+    await user.click(screen.getByLabelText("Masquer la mention VOXO (marque blanche)"));
+    await user.click(screen.getByRole("button", { name: "Enregistrer" }));
+
+    expect(update).toHaveBeenCalledWith(expect.objectContaining({ hide_branding: true }));
   });
 });

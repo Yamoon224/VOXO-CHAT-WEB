@@ -10,4 +10,5 @@ export type WidgetSettings = {
   language: "fr" | "en";
   business_hours: BusinessHourSlot[] | null;
   offline_message: string | null;
+  hide_branding: boolean;
 };
