@@ -60,6 +60,7 @@ export type StatusMaintenance = {
   title: string;
   description: string | null;
   status: StatusMaintenanceStatus;
+  status_label: string;
   scheduled_start: string;
   scheduled_end: string;
 };

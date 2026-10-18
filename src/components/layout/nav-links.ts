@@ -23,6 +23,7 @@ export const NAV_LINKS: NavLink[] = [
   { href: "/settings/automations", label: "Automatisations", permission: "automations.manage" },
   { href: "/settings/campaigns", label: "Campagnes", permission: "campaigns.manage" },
   { href: "/settings/integrations", label: "Intégrations", permission: "integrations.manage" },
+  { href: "/settings/status-page", label: "Page de statut", permission: "status_page.manage" },
   { href: "/settings/help-center", label: "Centre d'aide", permission: "help_center.view" },
   { href: "/settings/assistant", label: "Agent IA", permission: "assistant.manage" },
   { href: "/settings/billing", label: "Facturation", permission: "billing.view" },
