@@ -16,6 +16,9 @@ export function ConversationDetailPage({ conversationId }: { conversationId: str
     members,
     cannedResponses,
     actionError,
+    typingVisitor,
+    visitorPresent,
+    sendTyping,
     changeStatus,
     assign,
     reply,
@@ -48,12 +51,19 @@ export function ConversationDetailPage({ conversationId }: { conversationId: str
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="flex flex-col gap-4 lg:col-span-2">
           <Card>
+            {visitorPresent && (
+              <p className="mb-2 flex items-center gap-1.5 text-xs text-muted">
+                <span className="h-2 w-2 rounded-full bg-primary" aria-hidden="true" />
+                Visiteur en ligne
+              </p>
+            )}
             <MessageThread messages={messages} />
+            {typingVisitor && <p className="mt-2 text-xs italic text-muted">Le visiteur est en train d&apos;écrire…</p>}
           </Card>
 
           {canManage && (
             <Card>
-              <ReplyForm cannedResponses={cannedResponses} onSubmit={reply} onSuggestReply={suggestReply} />
+              <ReplyForm cannedResponses={cannedResponses} onSubmit={reply} onSuggestReply={suggestReply} onTyping={sendTyping} />
             </Card>
           )}
         </div>

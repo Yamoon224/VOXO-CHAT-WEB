@@ -1,22 +1,35 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Alert, Button } from "@/components/ui";
 import { useReplyForm } from "@/features/conversations/components/useReplyForm";
 import type { AiSuggestion, CannedResponse, MessageVisibility } from "@/features/conversations/types";
+
+const TYPING_THROTTLE_MS = 3000;
 
 export function ReplyForm({
   cannedResponses,
   onSubmit,
   onSuggestReply,
+  onTyping,
 }: {
   cannedResponses: CannedResponse[];
   onSubmit: (body: string, visibility: MessageVisibility) => Promise<void>;
   onSuggestReply: () => Promise<AiSuggestion | null>;
+  /** Indicateur de saisie (section 4.1) : whisper temps réel, pas d'appel API. */
+  onTyping?: () => void;
 }) {
   const { body, setBody, visibility, setVisibility, isSubmitting, error, handleSubmit } = useReplyForm(onSubmit);
   const [isSuggesting, setIsSuggesting] = useState(false);
   const [suggestionCitations, setSuggestionCitations] = useState<AiSuggestion["citations"]>([]);
+  const lastTypingSentAt = useRef(0);
+
+  function notifyTyping() {
+    const now = Date.now();
+    if (now - lastTypingSentAt.current < TYPING_THROTTLE_MS) return;
+    lastTypingSentAt.current = now;
+    onTyping?.();
+  }
 
   async function handleSuggestReply() {
     setIsSuggesting(true);
@@ -75,7 +88,10 @@ export function ReplyForm({
           required
           rows={3}
           value={body}
-          onChange={(event) => setBody(event.target.value)}
+          onChange={(event) => {
+            setBody(event.target.value);
+            notifyTyping();
+          }}
           className="rounded-md border border-border-strong bg-surface px-3 py-2 text-sm text-foreground"
         />
         {suggestionCitations.length > 0 && (

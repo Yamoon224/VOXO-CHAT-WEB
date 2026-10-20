@@ -4,6 +4,7 @@ import * as conversationsApi from "@/features/conversations/api";
 import * as teamApi from "@/features/team/api";
 import * as ticketsApi from "@/features/tickets/api";
 import { ApiError } from "@/lib/api/errors";
+import { useConversationRealtime } from "@/features/conversations/components/useConversationRealtime";
 import type { AiSuggestion, CannedResponse, Conversation, ConversationStatus, Message, MessageVisibility } from "@/features/conversations/types";
 import type { Member } from "@/features/team/types";
 
@@ -14,9 +15,9 @@ const POLL_INTERVAL_MS = 4000;
 /**
  * Une conversation et son fil, pour l'écran `/conversations/[id]`.
  *
- * Le fil se recharge périodiquement tant que l'écran est ouvert : rien côté
- * client ne prévient de l'arrivée d'un nouveau message du visiteur (pas de
- * temps réel pour l'instant, voir la note de portée du lot 2).
+ * Le fil se met à jour en temps réel quand un serveur Reverb est configuré
+ * (section 4.1) ; sinon il se recharge périodiquement (comportement d'avant
+ * ce lot, voir `useConversationRealtime`).
  */
 export function useConversationDetailPage(conversationId: string) {
   const router = useRouter();
@@ -49,13 +50,22 @@ export function useConversationDetailPage(conversationId: string) {
     void load();
   }, [load]);
 
+  const { available: realtimeAvailable, typingVisitor, visitorPresent, sendTyping } = useConversationRealtime(
+    conversationId,
+    (message) => setMessages((current) => (current.some((existing) => existing.id === message.id) ? current : [...current, message])),
+  );
+
   useEffect(() => {
+    // Le temps réel couvre déjà l'arrivée des messages : sonder en plus
+    // serait redondant (voir `useConversationRealtime`).
+    if (realtimeAvailable) return;
+
     const timer = setInterval(() => {
       void conversationsApi.listMessages(conversationId).then(({ data }) => setMessages(data));
     }, POLL_INTERVAL_MS);
 
     return () => clearInterval(timer);
-  }, [conversationId]);
+  }, [conversationId, realtimeAvailable]);
 
   async function changeStatus(status: ConversationStatus) {
     setActionError(null);
@@ -79,7 +89,9 @@ export function useConversationDetailPage(conversationId: string) {
 
   async function reply(body: string, visibility: MessageVisibility) {
     const { data } = await conversationsApi.postMessage(conversationId, body, visibility);
-    setMessages((current) => [...current, data]);
+    // Le temps réel peut livrer le même message (voir `useConversationRealtime`) :
+    // jamais de doublon, quel que soit l'ordre d'arrivée des deux.
+    setMessages((current) => (current.some((existing) => existing.id === data.id) ? current : [...current, data]));
   }
 
   async function summarize() {
@@ -132,6 +144,9 @@ export function useConversationDetailPage(conversationId: string) {
     members,
     cannedResponses,
     actionError,
+    typingVisitor,
+    visitorPresent,
+    sendTyping,
     changeStatus,
     assign,
     reply,
