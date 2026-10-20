@@ -4,8 +4,9 @@
   "private": true,
   "description": "Interface Next.js de VOXO : site, authentification, tableau de bord et réglages d'espace de travail.",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "dev": "npm run build:widget && next dev",
+    "build": "npm run build:widget && next build",
+    "build:widget": "node scripts/build-widget.mjs",
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",

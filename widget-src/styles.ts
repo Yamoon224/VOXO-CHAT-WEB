@@ -1,5 +1,19 @@
+const DEFAULT_COLOR = "#4F46E5";
+
+/**
+ * Revalidé côté client bien que le backend l'impose déjà en `^#[0-9A-Fa-f]{6}$`
+ * (`UpdateWidgetSettingsRequest`) : cette valeur est interpolée telle quelle
+ * dans une balise `<style>` via `innerHTML`, jamais échappée — une défense en
+ * profondeur, pas une confiance dans la seule validation serveur.
+ */
+function sanitizeColor(value: string): string {
+  return /^#[0-9a-f]{6}$/i.test(value) ? value : DEFAULT_COLOR;
+}
+
 /** Styles injectés dans la racine Shadow DOM (isolation du site hôte, section 2.3). */
-export function buildStyles(primaryColor: string): string {
+export function buildStyles(rawPrimaryColor: string): string {
+  const primaryColor = sanitizeColor(rawPrimaryColor);
+
   return `
     :host { all: initial; }
     * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
