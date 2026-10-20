@@ -6,7 +6,50 @@ import { SessionProvider } from "@/lib/auth/session-context";
 import * as authApi from "@/features/auth/api";
 import * as conversationsApi from "@/features/conversations/api";
 import * as teamApi from "@/features/team/api";
+import { getEcho } from "@/lib/realtime/echo";
 import type { Conversation, Message } from "@/features/conversations/types";
+
+type FakePresenceChannel = {
+  here: (callback: (members: { id: string }[]) => void) => FakePresenceChannel;
+  joining: (callback: (member: { id: string }) => void) => FakePresenceChannel;
+  leaving: (callback: (member: { id: string }) => void) => FakePresenceChannel;
+  listenForWhisper: (event: string, callback: () => void) => FakePresenceChannel;
+  whisper: (event: string, data: unknown) => void;
+  triggerTyping: () => void;
+};
+
+function makeFakeEcho() {
+  let typingCallback: (() => void) | null = null;
+  const presenceChannel: FakePresenceChannel = {
+    here(callback) {
+      callback([{ id: "visitor:visitor-1" }]);
+      return presenceChannel;
+    },
+    joining() {
+      return presenceChannel;
+    },
+    leaving() {
+      return presenceChannel;
+    },
+    listenForWhisper(_event, callback) {
+      typingCallback = callback;
+      return presenceChannel;
+    },
+    whisper: vi.fn(),
+    triggerTyping() {
+      typingCallback?.();
+    },
+  };
+
+  return {
+    echo: {
+      private: () => ({ listen: () => {} }),
+      join: () => presenceChannel,
+      leave: vi.fn(),
+    },
+    presenceChannel,
+  };
+}
 
 vi.mock("next/navigation", () => ({
   useRouter: () => ({ push: vi.fn() }),
@@ -19,6 +62,7 @@ vi.mock("@/lib/auth/token-store", () => ({
   setToken: vi.fn(),
   clearToken: vi.fn(),
 }));
+vi.mock("@/lib/realtime/echo", () => ({ getEcho: vi.fn(() => null) }));
 
 const conversation: Conversation = {
   id: "conv-1",
@@ -95,6 +139,39 @@ describe("ConversationDetailPage", () => {
     await user.click(screen.getByRole("button", { name: "Répondre" }));
 
     await waitFor(() => expect(screen.getByText("Nous sommes ouverts de 9h à 18h.")).toBeInTheDocument());
+  });
+
+  it("affiche la presence de l'agent recu en temps reel", async () => {
+    mockSessionAs(["conversations.view", "conversations.manage"]);
+    mockLoads();
+    const { echo } = makeFakeEcho();
+    vi.mocked(getEcho).mockReturnValue(echo as unknown as ReturnType<typeof getEcho>);
+
+    render(
+      <SessionProvider>
+        <ConversationDetailPage conversationId="conv-1" />
+      </SessionProvider>,
+    );
+
+    expect(await screen.findByText("Visiteur en ligne")).toBeInTheDocument();
+  });
+
+  it("affiche l'indicateur de saisie quand le visiteur ecrit", async () => {
+    mockSessionAs(["conversations.view", "conversations.manage"]);
+    mockLoads();
+    const { echo, presenceChannel } = makeFakeEcho();
+    vi.mocked(getEcho).mockReturnValue(echo as unknown as ReturnType<typeof getEcho>);
+
+    render(
+      <SessionProvider>
+        <ConversationDetailPage conversationId="conv-1" />
+      </SessionProvider>,
+    );
+    await screen.findByText("Quels sont vos horaires ?");
+
+    presenceChannel.triggerTyping();
+
+    expect(await screen.findByText("Le visiteur est en train d'écrire…")).toBeInTheDocument();
   });
 
   it("masque le formulaire de reponse sans conversations.manage", async () => {

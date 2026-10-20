@@ -15,7 +15,9 @@ export function useConversationRealtime(conversationId: string, onMessage: (mess
   const [typingVisitor, setTypingVisitor] = useState(false);
   const [visitorPresent, setVisitorPresent] = useState(false);
   const onMessageRef = useRef(onMessage);
-  onMessageRef.current = onMessage;
+  useEffect(() => {
+    onMessageRef.current = onMessage;
+  }, [onMessage]);
 
   const echo = getEcho();
 

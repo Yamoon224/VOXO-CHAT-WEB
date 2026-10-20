@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "@/components/ui";
+import { Badge, Button } from "@/components/ui";
+import { formatDate } from "@/lib/format";
 
-export function ScriptPanel({ script }: { script: string }) {
+export function ScriptPanel({ script, lastInstalledCheckAt }: { script: string; lastInstalledCheckAt: string | null }) {
   const [copied, setCopied] = useState(false);
 
   async function handleCopy() {
@@ -19,6 +20,13 @@ export function ScriptPanel({ script }: { script: string }) {
 
   return (
     <div className="flex flex-col gap-3">
+      <div>
+        {lastInstalledCheckAt ? (
+          <Badge tone="primary">Installé — vu pour la dernière fois le {formatDate(lastInstalledCheckAt)}</Badge>
+        ) : (
+          <Badge tone="neutral">Installation non détectée pour l&apos;instant</Badge>
+        )}
+      </div>
       <pre className="overflow-x-auto rounded-md border border-border-strong bg-border/20 p-3 text-xs text-foreground">
         <code>{script}</code>
       </pre>

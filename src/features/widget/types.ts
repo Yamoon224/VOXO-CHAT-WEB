@@ -11,4 +11,6 @@ export type WidgetSettings = {
   business_hours: BusinessHourSlot[] | null;
   offline_message: string | null;
   hide_branding: boolean;
+  /** Vérification d'installation (section 2.3) : dernier appel public des réglages, ou `null` si jamais atteint. */
+  last_installed_check_at: string | null;
 };

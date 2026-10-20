@@ -28,7 +28,10 @@ export function createApi(apiBaseUrl: string) {
       return request("/public/widget/messages", { method: "POST", body: JSON.stringify({ token, body }) });
     },
     listMessages(token: string): Promise<{ data: WidgetMessage[]; meta: { conversation_id: string | null } }> {
-      return request(`/public/widget/messages?token=${encodeURIComponent(token)}`);
+      // Un jeton dans l'URL finit dans les journaux serveur et l'historique
+      // du navigateur : même en-tête que l'authentification des canaux
+      // temps réel (voir `realtime.ts`), jamais la requête.
+      return request("/public/widget/messages", { headers: { "X-Visitor-Token": token } });
     },
     rate(token: string, conversationId: string, rating: number, comment?: string): Promise<void> {
       return request("/public/widget/ratings", {

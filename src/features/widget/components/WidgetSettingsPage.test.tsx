@@ -21,6 +21,7 @@ describe("WidgetSettingsPage", () => {
         business_hours: null,
         offline_message: null,
         hide_branding: false,
+        last_installed_check_at: null,
       },
     });
     vi.mocked(widgetApi.getScript).mockResolvedValue({ data: { script: "<script>window.VoxoWidgetConfig</script>" } });
@@ -29,5 +30,27 @@ describe("WidgetSettingsPage", () => {
 
     expect(await screen.findByDisplayValue("#4F46E5")).toBeInTheDocument();
     expect(screen.getByText(/VoxoWidgetConfig/)).toBeInTheDocument();
+    expect(screen.getByText("Installation non détectée pour l'instant")).toBeInTheDocument();
+  });
+
+  it("affiche l'installation detectee quand une verification a eu lieu", async () => {
+    vi.mocked(widgetApi.getSettings).mockResolvedValue({
+      data: {
+        primary_color: "#4F46E5",
+        logo_url: null,
+        position: "bottom_right",
+        welcome_message: null,
+        language: "fr",
+        business_hours: null,
+        offline_message: null,
+        hide_branding: false,
+        last_installed_check_at: "2026-10-20T10:00:00Z",
+      },
+    });
+    vi.mocked(widgetApi.getScript).mockResolvedValue({ data: { script: "<script>window.VoxoWidgetConfig</script>" } });
+
+    render(<WidgetSettingsPage />);
+
+    expect(await screen.findByText(/Installé —/)).toBeInTheDocument();
   });
 });

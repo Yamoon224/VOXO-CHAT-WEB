@@ -34,7 +34,7 @@ export function WidgetSettingsPage() {
       {script && (
         <Card>
           <h2 className="mb-4 text-sm font-semibold text-foreground">Script d&apos;intégration</h2>
-          <ScriptPanel script={script} />
+          <ScriptPanel script={script} lastInstalledCheckAt={settings.last_installed_check_at} />
         </Card>
       )}
     </div>

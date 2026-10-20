@@ -13,6 +13,7 @@ const settings: WidgetSettings = {
   business_hours: null,
   offline_message: null,
   hide_branding: false,
+  last_installed_check_at: null,
 };
 
 describe("WidgetSettingsForm", () => {
